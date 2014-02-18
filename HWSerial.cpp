@@ -1,48 +1,48 @@
 #include "HWSerial.h"
 #ifdef MEGA
 	HWSerial::HWSerial(){
-			Serial1.begin(9600);
+			Serial2.begin(9600);
 			
 	}
 	/*
 	bool HWSerial::listen(){
-		return Serial1.listen();
+		return Serial2.listen();
 	}
 	*/
 	void HWSerial::end(){
-		Serial1.end();
+		Serial2.end();
 	}
 	/*
 	bool HWSerial::isListening(){
-		return Serial1.isListening();
+		return Serial2.isListening();
 	}
 
 	bool HWSerial::overflow(){
-		return Serial1.overflow();
+		return Serial2.overflow();
 	}
 	*/
 	void HWSerial::begin(long baud_rate){
-		Serial1.begin(baud_rate);
+		Serial2.begin(baud_rate);
 	}
 	
 	int HWSerial::peek(){
-		return Serial1.peek();
+		return Serial2.peek();
 	}
 
 	 size_t HWSerial::write(uint8_t byte){
-		return Serial1.write(byte);
+		return Serial2.write(byte);
 	}
 
 	 int HWSerial::read(){
-		return Serial1.read();
+		return Serial2.read();
 	}
 		
 	 int HWSerial::available(){
-		return Serial1.available();
+		return Serial2.available();
 	}
 
 	 void HWSerial::flush(){
-		Serial1.flush();
+		Serial2.flush();
 	}
 	
 	
