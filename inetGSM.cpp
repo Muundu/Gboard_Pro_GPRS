@@ -122,6 +122,65 @@ int InetGSM::httpPOST(const char* server, int port, const char* path, const char
   return res;
 }
 
+int InetGSM::httpJsonPOST(const char* server, int port, const char* path, const char* parameters, char* result, int resultlength)
+{
+  boolean connected=false;
+  int n_of_at=0;
+  char itoaBuffer[8];
+  int num_char;
+  char end_c[2];
+  end_c[0]=0x1a;
+  end_c[1]='\0';
+
+  while(n_of_at<3){
+	  if(!connectTCP(server, port)){
+	  	#ifdef DEBUG_ON
+			Serial.println("DB:NOT CONN");
+		#endif	
+	    	n_of_at++;
+	  }
+	  else{
+		connected=true;
+		n_of_at=3;
+	}
+  }
+
+  if(!connected) return 0;
+	
+  gsm.SimpleWrite("POST ");
+  gsm.SimpleWrite(path);
+  gsm.SimpleWrite(" HTTP/1.1\nHost: ");
+  gsm.SimpleWrite(server);
+  gsm.SimpleWrite("\n");
+  gsm.SimpleWrite("User-Agent: Arduino\n");
+  gsm.SimpleWrite("Content-Type: application/json\n");
+  gsm.SimpleWrite("Content-Length: ");
+  itoa(strlen(parameters),itoaBuffer,10);
+  gsm.SimpleWrite(itoaBuffer);
+  gsm.SimpleWrite("\n\n");
+  gsm.SimpleWrite(parameters);
+  gsm.SimpleWrite("\n\n");
+  gsm.SimpleWrite(end_c);
+ 
+  switch(gsm.WaitResp(10000, 10, "SEND OK")){
+	case RX_TMOUT_ERR: 
+		return 0;
+	break;
+	case RX_FINISHED_STR_NOT_RECV: 
+		return 0; 
+	break;
+  }
+
+ delay(50);
+	#ifdef DEBUG_ON
+		Serial.println("DB:SENT");
+	#endif	
+
+  int res= gsm.read(result, resultlength);
+  //gsm.disconnectTCP();
+  return res;
+}
+
 int InetGSM::openmail(char* server, char* loginbase64, char* passbase64, char* from, char* to, char* subj)
 {
   boolean connected=false;
